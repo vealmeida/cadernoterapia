@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Cadernoterapia">
+<meta name="theme-color" content="#f7f1e8">
+<title>Cadernoterapia — prova de conceito</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f7f1e8; --card:#fffdf9; --ink:#2d2a26; --muted:#7a716a; --line:#e6dccd;
+    --accent:#b5654a; --accent-soft:#f3e1d8; --sage:#6f8a6b; --sage-soft:#e3ebe0;
+    --radius:18px; --shadow:0 1px 2px rgba(60,40,20,.06),0 6px 20px rgba(60,40,20,.06);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--paper);color:var(--ink);font-family:"Nunito Sans",system-ui,sans-serif;font-size:16px;line-height:1.5}
+  body{min-height:100vh}
+  .app{max-width:480px;margin:0 auto;padding:20px 18px 110px;min-height:100vh}
+  h1,h2,h3,.serif{font-family:"Fraunces",Georgia,serif;font-weight:600;letter-spacing:-.01em}
+  .brand{display:flex;align-items:center;gap:10px;margin-bottom:22px}
+  .brand-mark{width:34px;height:34px;border-radius:10px;background:var(--accent);display:grid;place-items:center}
+  .brand-name{font-family:"Fraunces",serif;font-size:20px;font-weight:600}
+  .badge{margin-left:auto;font-size:12px;font-weight:700;padding:4px 10px;border-radius:99px;background:var(--line);color:var(--muted)}
+  .badge.plus{background:var(--accent);color:#fff}
+  .greet{font-size:28px;line-height:1.2;margin-bottom:6px}
+  .sub{color:var(--muted);margin-bottom:20px}
+  .section-title{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700;margin:26px 0 12px}
+  .moods{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .mood{border:1.5px solid var(--line);background:var(--card);border-radius:14px;padding:12px 4px 10px;text-align:center;cursor:pointer;font:inherit;color:inherit;font-size:13px;font-weight:600;transition:.15s}
+  .mood .dot{width:22px;height:22px;border-radius:50%;margin:0 auto 6px}
+  .mood.on{border-color:var(--ink);background:#fff;transform:translateY(-1px)}
+  .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+  .q-card{margin-top:18px;position:relative;overflow:hidden}
+  .q-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--qc,var(--accent))}
+  .q-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px}
+  .q-text{font-family:"Fraunces",serif;font-size:22px;line-height:1.35;font-weight:400}
+  .empty{color:var(--muted);text-align:center;padding:26px 10px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+  .btn{border:none;border-radius:99px;padding:12px 18px;font:inherit;font-weight:700;cursor:pointer;transition:.15s}
+  .btn.primary{background:var(--ink);color:#fff}
+  .btn.accent{background:var(--accent);color:#fff}
+  .btn.ghost{background:transparent;border:1.5px solid var(--line);color:var(--ink)}
+  .btn.full{width:100%}
+  .btn:disabled{opacity:.4;cursor:default}
+  .btn:active{transform:scale(.98)}
+  .hand{display:flex;gap:12px;margin-top:18px;padding:14px;border-radius:14px;background:var(--paper);border:1.5px dashed var(--line);font-size:15px;line-height:1.5}
+  .hand svg{flex:0 0 26px;width:26px;height:26px;color:var(--accent);margin-top:2px}
+  textarea{width:100%;min-height:180px;border:1.5px solid var(--line);border-radius:14px;padding:14px;font:inherit;font-size:16px;line-height:1.6;background:#fff repeating-linear-gradient(transparent,transparent 29px,#efe6d8 30px);background-attachment:local;resize:vertical;color:var(--ink);margin-top:16px}
+  textarea:focus{outline:none;border-color:var(--accent)}
+  .counter{font-size:13px;color:var(--muted);margin-top:12px;text-align:center}
+  .counter a{color:var(--accent);font-weight:700;cursor:pointer}
+  .prog{display:block;width:100%;text-align:left;font:inherit;color:inherit;border:none;cursor:pointer;margin-bottom:14px}
+  .prog-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .pill{font-size:12px;font-weight:700;padding:4px 10px;border-radius:99px;background:var(--sage-soft);color:var(--sage)}
+  .pill.lock{background:var(--accent-soft);color:var(--accent)}
+  .prog h3{font-size:21px;margin-bottom:4px}
+  .prog p{color:var(--muted);font-size:14px}
+  .bar{height:7px;background:var(--line);border-radius:99px;margin-top:14px;overflow:hidden}
+  .bar i{display:block;height:100%;background:var(--sage);border-radius:99px}
+  .back{background:none;border:none;font:inherit;color:var(--muted);font-weight:700;cursor:pointer;margin-bottom:14px;padding:4px 0}
+  .week{margin-top:22px}
+  .week h4{font-family:"Fraunces",serif;font-size:17px;margin-bottom:10px}
+  .days{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}
+  .day{aspect-ratio:1;border-radius:12px;border:1.5px solid var(--line);background:var(--card);font:inherit;font-weight:700;color:var(--ink);cursor:pointer;display:grid;place-items:center;font-size:15px}
+  .day.done{background:var(--sage);border-color:var(--sage);color:#fff}
+  .day.next{border-color:var(--ink);border-width:2px}
+  .day.locked{color:#c9bfb2;cursor:default}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .stat{background:var(--card);border-radius:14px;padding:14px 10px;text-align:center;box-shadow:var(--shadow)}
+  .stat b{display:block;font-family:"Fraunces",serif;font-size:26px;font-weight:600}
+  .stat span{font-size:12px;color:var(--muted)}
+  .mbars{display:flex;flex-direction:column;gap:8px}
+  .mbar{display:grid;grid-template-columns:92px 1fr 24px;align-items:center;gap:10px;font-size:14px}
+  .mbar .track{height:10px;background:var(--line);border-radius:99px;overflow:hidden}
+  .mbar .track i{display:block;height:100%;border-radius:99px}
+  .mbar .n{color:var(--muted);text-align:right;font-size:13px}
+  .entry{margin-bottom:12px;cursor:pointer}
+  .entry-meta{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);margin-bottom:6px}
+  .entry-meta .dot{width:10px;height:10px;border-radius:50%}
+  .entry-q{font-family:"Fraunces",serif;font-size:17px;line-height:1.35}
+  .entry-a{margin-top:10px;white-space:pre-wrap;font-size:15px;display:none;border-top:1px dashed var(--line);padding-top:10px}
+  .entry.open .entry-a{display:block}
+  .plan{border:2px solid var(--accent)}
+  .plan .price{font-family:"Fraunces",serif;font-size:40px;font-weight:600}
+  .plan .price small{font-size:16px;color:var(--muted);font-family:"Nunito Sans",sans-serif;font-weight:600}
+  .plan ul{list-style:none;margin:14px 0 18px}
+  .plan li{padding:6px 0 6px 26px;position:relative}
+  .plan li::before{content:"";position:absolute;left:2px;top:11px;width:12px;height:12px;border-radius:50%;background:var(--sage-soft);border:3px solid var(--sage)}
+  .note{font-size:13px;color:var(--muted);background:var(--accent-soft);border-radius:12px;padding:10px 12px;margin-top:12px}
+  .link{background:none;border:none;font:inherit;color:var(--accent);font-weight:700;cursor:pointer;padding:0}
+  nav{position:fixed;bottom:0;left:0;right:0;background:rgba(255,253,249,.96);backdrop-filter:blur(8px);border-top:1px solid var(--line);padding:8px 0 calc(8px + env(safe-area-inset-bottom))}
+  nav .in{max-width:480px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+  nav button{background:none;border:none;font:inherit;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px}
+  nav button svg{width:24px;height:24px}
+  nav button.on{color:var(--ink)}
+  .sheet-bg{position:fixed;inset:0;background:rgba(45,42,38,.35);display:none;align-items:flex-end;justify-content:center;z-index:20}
+  .sheet-bg.show{display:flex}
+  .sheet{background:var(--paper);width:100%;max-width:480px;border-radius:24px 24px 0 0;padding:22px 18px calc(22px + env(safe-area-inset-bottom));max-height:92vh;overflow:auto;animation:up .25s ease}
+  @keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+  .toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:99px;font-size:14px;font-weight:600;opacity:0;transition:.25s;pointer-events:none;z-index:30;white-space:nowrap}
+  .toast.show{opacity:1}
+  .fade{animation:fade .3s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .poc{font-size:12px;text-align:center;color:var(--muted);margin-top:30px}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+
+<nav><div class="in">
+  <button data-tab="hoje"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/><circle cx="12" cy="12" r="4"/></svg>Hoje</button>
+  <button data-tab="programas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>Programas</button>
+  <button data-tab="diario"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 3h11a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M8 8h6M8 12h6"/></svg>Percurso</button>
+  <button data-tab="conta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>Conta</button>
+</div></nav>
+
+<div class="sheet-bg" id="sheetBg"><div class="sheet" id="sheet"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============ CONTEÚDO (editável pela Cadernoterapia) ============ */
+const MOODS = [
+  {id:"ansiedade",  nome:"Ansiedade",  cor:"#d9a441"},
+  {id:"tristeza",   nome:"Tristeza",   cor:"#6c8db5"},
+  {id:"cansaco",    nome:"Cansaço",    cor:"#9a8fa8"},
+  {id:"raiva",      nome:"Raiva",      cor:"#c4553f"},
+  {id:"confusao",   nome:"Confusão",   cor:"#b48a6a"},
+  {id:"gratidao",   nome:"Gratidão",   cor:"#6f8a6b"},
+  {id:"serenidade", nome:"Serenidade", cor:"#5fa3a0"},
+  {id:"esperanca",  nome:"Esperança",  cor:"#e08a6b"}
+];
+
+const PERGUNTAS = {
+  ansiedade:[
+    "O que está a ocupar mais espaço na tua cabeça neste momento? Escreve tudo, sem filtro, durante cinco minutos.",
+    "Se a tua ansiedade pudesse falar, o que te diria hoje? E o que lhe responderias tu?",
+    "Divide a página em duas colunas: o que depende de ti e o que não depende. O que podes largar hoje?",
+    "Descreve um lugar onde te sentes em segurança, com todos os pormenores: cheiros, sons, cores.",
+    "Qual é o pior cenário que estás a imaginar? E qual é o cenário mais provável?",
+    "Que pequeno gesto de cuidado te podes oferecer nas próximas horas?"
+  ],
+  tristeza:[
+    "Escreve uma carta à tua tristeza. O que gostarias que ela soubesse?",
+    "O que perdeste, ou sentes que te falta, neste momento?",
+    "Lembra-te de um momento em que alguém esteve verdadeiramente ao teu lado. Como foi?",
+    "Se alguém de quem gostas muito sentisse o que sentes hoje, o que lhe dirias?",
+    "O que precisas hoje e ainda não pediste a ninguém?",
+    "Que memória te traz conforto? Revive-a por escrito."
+  ],
+  cansaco:[
+    "O que te tem tirado mais energia esta semana? E o que ta devolve?",
+    "Se hoje pudesses dizer «não» a uma coisa, qual seria?",
+    "Descreve como seria um dia de descanso verdadeiro, à tua medida.",
+    "Que exigências tens feito a ti que talvez nem sejam tuas?",
+    "Onde sentes o cansaço no corpo? Escreve-lhe como se fosse uma pessoa."
+  ],
+  raiva:[
+    "O que te deixou com raiva? Escreve sem censura — esta página aguenta tudo.",
+    "Que limite teu sentes que foi ultrapassado?",
+    "Por baixo da raiva, que outra emoção pode estar escondida?",
+    "Escreve uma carta que nunca vais enviar à pessoa ou situação que te magoou.",
+    "O que precisarias de ouvir, ou de fazer, para esta raiva acalmar?"
+  ],
+  confusao:[
+    "Escreve a pergunta que te anda a acompanhar. Depois responde-lhe como se já soubesses a resposta.",
+    "Que opções tens à tua frente? Escreve o que sentes no corpo ao imaginar cada uma.",
+    "Se daqui a cinco anos olhasses para este momento, o que verias com mais clareza?",
+    "O que sabes com certeza, mesmo no meio da dúvida?",
+    "Que valor teu pode servir de bússola nesta decisão?"
+  ],
+  gratidao:[
+    "Escreve três coisas pequenas que correram bem hoje — e porquê.",
+    "A quem deves um agradecimento que ainda não fizeste? Escreve-lho aqui.",
+    "Que qualidade tua te ajudou recentemente? Agradece-lhe.",
+    "Que momento simples desta semana gostarias de guardar para sempre?",
+    "O que tens hoje que um dia desejaste ter?"
+  ],
+  serenidade:[
+    "O que contribuiu para te sentires assim hoje? Como o podes repetir?",
+    "Descreve este momento de calma com todos os sentidos.",
+    "Que conselho darias à tua versão mais agitada?",
+    "Que hábito, lugar ou pessoa te traz paz? Escreve sobre isso.",
+    "O que gostarias de semear agora que tens espaço?"
+  ],
+  esperanca:[
+    "O que desejas que aconteça? Descreve-o como se já tivesse acontecido.",
+    "Que pequeno passo podes dar esta semana na direção do que sonhas?",
+    "Escreve uma carta à tua versão de daqui a um ano.",
+    "O que te mostra que a mudança é possível?",
+    "Quem te inspira, e porquê?"
+  ]
+};
+
+const PROGRAMAS = [
+  {
+    id:"ansiedade21", titulo:"21 dias para acalmar a ansiedade", cor:"#d9a441",
+    desc:"Três semanas para observar, compreender e cuidar da tua ansiedade, uma página de cada vez.",
+    semanas:["Observar","Compreender","Cuidar"],
+    dias:[
+      "Como está o teu corpo neste momento? Descreve-o da cabeça aos pés.",
+      "Em que situações a ansiedade costuma aparecer?",
+      "Escreve sobre a última vez que sentiste ansiedade. O que aconteceu antes?",
+      "Que pensamentos se repetem quando te preocupas?",
+      "Onde sentes a ansiedade no corpo? Que forma, cor ou temperatura tem?",
+      "O que costumas fazer para a aliviar? O que resulta e o que não resulta?",
+      "Revê a semana: o que descobriste sobre a tua ansiedade?",
+      "Se a tua ansiedade estivesse a tentar proteger-te, de que seria?",
+      "Que exigências fazes a ti que talvez sejam exageradas?",
+      "Escreve uma preocupação e, a seguir, três formas diferentes de olhar para ela.",
+      "Que histórias antigas sobre ti alimentam o medo de hoje?",
+      "O que não está nas tuas mãos? Escreve uma frase de aceitação.",
+      "Quem ou o que te faz sentir em segurança?",
+      "Revê a semana: que padrão começaste a perceber?",
+      "Escreve uma carta de compaixão a ti, como se fosses o teu melhor amigo ou amiga.",
+      "Descreve a tua rotina ideal de fim de dia para acalmar.",
+      "Que três frases te podem acompanhar num momento difícil?",
+      "Que limite precisas de colocar para proteger a tua paz?",
+      "Lembra-te de uma vez em que superaste algo que te assustava. Como o fizeste?",
+      "O que queres levar contigo destes 21 dias?",
+      "Escreve uma carta à tua versão de há 21 dias. O que lhe dirias?"
+    ]
+  },
+  {
+    id:"autoestima21", titulo:"21 dias de autoestima", cor:"#e08a6b",
+    desc:"Reconhecer quem és, fazer as pazes com o que carregas e afirmar o teu valor.",
+    semanas:["Reconhecer","Reconciliar","Afirmar"],
+    dias:[
+      "Como te descreverias a alguém que não te conhece?",
+      "Que coisas fazes bem e raramente reconheces?",
+      "Que elogio já recebeste e tiveste dificuldade em aceitar? Porquê?",
+      "De que conquista, pequena ou grande, te orgulhas?",
+      "Como falas contigo quando erras? Escreve as palavras exatas.",
+      "Que pessoas te fazem sentir valor? O que têm em comum?",
+      "Revê a semana: o que reconheceste em ti?",
+      "De onde veio a voz crítica que trazes dentro de ti?",
+      "Que parte do teu corpo tens tratado com menos carinho? Escreve-lhe.",
+      "Que erro do passado ainda carregas? O que aprendeste com ele?",
+      "Em que momentos te comparas com os outros? O que sentes?",
+      "Escreve um perdão a ti, por algo concreto.",
+      "O que gostarias que a criança que foste soubesse hoje?",
+      "Revê a semana: com que parte de ti fizeste as pazes?",
+      "Que valores são inegociáveis para ti?",
+      "O que mereces e ainda não te permites?",
+      "Escreve dez frases a começar por «Eu sou…».",
+      "Que «não» precisas de dizer para te respeitares?",
+      "Descreve um dia em que te tratas como tratarias alguém que amas.",
+      "Que compromisso queres assumir contigo a partir de agora?",
+      "Escreve uma carta de admiração a ti."
+    ]
+  }
+];
+
+const HAND = `<div class="hand">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 3h11a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M8 8h6M8 12h6"/></svg>
+  <div><b>Pousa o telemóvel e abre o teu caderno.</b><br>Escreve a data e esta pergunta no topo da página e responde à mão, sem pressa e sem filtro. A app não guarda o que escreves: essa parte é só tua.</div>
+</div>`;
+
+const LIMITE_GRATIS = 3; // perguntas por dia no plano gratuito
+
+/* ============ ESTADO (guardado só neste dispositivo) ============ */
+const KEY = "cadernoterapia_poc_v1";
+let S = {entries:[], premium:false, gen:{d:"",n:0}, progs:{}};
+try { const raw = localStorage.getItem(KEY); if (raw) S = Object.assign(S, JSON.parse(raw)); } catch(e) {}
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e) {} }
+
+let tab = "hoje", mood = null, pergunta = null, ultima = {}, progAberto = null;
+const $ = s => document.querySelector(s);
+const hoje = () => new Date().toISOString().slice(0,10);
+const moodById = id => MOODS.find(m => m.id === id);
+const esc = t => t.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove("show"),2200); }
+
+function usadasHoje(){ return S.gen.d === hoje() ? S.gen.n : 0; }
+function podeGerar(){ return S.premium || usadasHoje() < LIMITE_GRATIS; }
+
+function gerar(mid){
+  if (!podeGerar()) { abrirPaywall("Chegaste ao limite de " + LIMITE_GRATIS + " perguntas por dia do plano gratuito."); return; }
+  if (!mid) mid = MOODS[Math.floor(Math.random()*MOODS.length)].id;
+  const lista = PERGUNTAS[mid];
+  let i; do { i = Math.floor(Math.random()*lista.length); } while (lista.length > 1 && i === ultima[mid]);
+  ultima[mid] = i;
+  mood = mid; pergunta = lista[i];
+  if (!S.premium) { if (S.gen.d !== hoje()) S.gen = {d:hoje(), n:0}; S.gen.n++; save(); }
+  render();
+}
+
+/* ============ VISTAS ============ */
+function header(){
+  return `<div class="brand">
+    <div class="brand-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 6l3 3"/></svg></div>
+    <div class="brand-name">Cadernoterapia</div>
+    <span class="badge ${S.premium?"plus":""}">${S.premium?"Plus":"Gratuito"}</span>
+  </div>`;
+}
+
+function vHoje(){
+  const h = new Date().getHours();
+  const saud = h < 12 ? "Bom dia" : h < 20 ? "Boa tarde" : "Boa noite";
+  const m = mood && moodById(mood);
+  let card;
+  if (pergunta) {
+    card = `<div class="card q-card fade" style="--qc:${m.cor}">
+      <div class="q-label">Para quem sente ${m.nome.toLowerCase()}</div>
+      <div class="q-text">${esc(pergunta)}</div>
+      ${HAND}
+      <div class="row">
+        <button class="btn primary" id="guardar">Já escrevi no caderno</button>
+        <button class="btn ghost" id="outra">Outra pergunta</button>
+      </div>
+    </div>`;
+  } else {
+    card = `<div class="card q-card"><div class="empty">
+      <div class="serif" style="font-size:19px;color:var(--ink);margin-bottom:6px">Escolhe como te sentes</div>
+      e recebes uma pergunta para escrever sobre isso.</div>
+      <button class="btn ghost full" id="surpresa">Surpreende-me</button></div>`;
+  }
+  const cont = S.premium ? "" : `<div class="counter">${Math.max(0,LIMITE_GRATIS-usadasHoje())} de ${LIMITE_GRATIS} perguntas gratuitas hoje · <a id="verPlus">Perguntas ilimitadas</a></div>`;
+  return header() + `
+    <h1 class="greet">${saud}.</h1>
+    <p class="sub">Como te sentes hoje?</p>
+    <div class="moods">${MOODS.map(x=>`<button class="mood ${mood===x.id?"on":""}" data-mood="${x.id}"><div class="dot" style="background:${x.cor}"></div>${x.nome}</button>`).join("")}</div>
+    ${card}${cont}
+    ${proximoPrograma()}
+    <p class="poc">Prova de conceito · os dados ficam só neste dispositivo</p>`;
+}
+
+function proximoPrograma(){
+  const ativo = PROGRAMAS.find(p => S.progs[p.id] && S.progs[p.id].length < 21);
+  if (!ativo) return "";
+  const n = S.progs[ativo.id].length;
+  return `<div class="section-title">O teu programa</div>
+    <button class="card prog" data-prog="${ativo.id}">
+      <div class="prog-top"><span class="pill">Dia ${n+1} de 21</span></div>
+      <h3>${ativo.titulo}</h3><p>${esc(ativo.dias[n])}</p>
+      <div class="bar"><i style="width:${n/21*100}%;background:${ativo.cor}"></i></div>
+    </button>`;
+}
+
+function vProgramas(){
+  if (progAberto) return vPrograma(PROGRAMAS.find(p=>p.id===progAberto));
+  return header() + `<h1 class="greet">Programas</h1>
+    <p class="sub">Percursos guiados de 21 dias, com uma pergunta por dia.</p>
+    ${PROGRAMAS.map(p=>{
+      const n = (S.progs[p.id]||[]).length;
+      const pill = !S.premium ? `<span class="pill lock">Plus · dia 1 grátis</span>` : n===21 ? `<span class="pill">Concluído</span>` : n ? `<span class="pill">Dia ${n+1} de 21</span>` : `<span class="pill">21 dias</span>`;
+      return `<button class="card prog" data-prog="${p.id}">
+        <div class="prog-top">${pill}</div>
+        <h3>${p.titulo}</h3><p>${p.desc}</p>
+        <div class="bar"><i style="width:${n/21*100}%;background:${p.cor}"></i></div>
+      </button>`;}).join("")}
+    <div class="note">Na versão final, a Cadernoterapia pode lançar novos programas todos os meses — é isso que mantém a subscrição viva.</div>`;
+}
+
+function vPrograma(p){
+  const feitos = S.progs[p.id] || [];
+  const prox = feitos.length;
+  let html = `<button class="back" id="voltar">← Programas</button>
+    <h1 class="greet">${p.titulo}</h1><p class="sub">${p.desc}</p>`;
+  p.semanas.forEach((nome, w) => {
+    html += `<div class="week"><h4>Semana ${w+1} · ${nome}</h4><div class="days">`;
+    for (let d = w*7; d < w*7+7; d++) {
+      const done = feitos.includes(d), next = d === prox;
+      const bloqueado = !done && !next || (!S.premium && d > 0);
+      html += `<button class="day ${done?"done":""} ${next&&!bloqueado?"next":""} ${bloqueado&&!done?"locked":""}" data-dia="${d}" ${bloqueado&&!done?"data-lock='1'":""}>${d+1}</button>`;
+    }
+    html += `</div></div>`;
+  });
+  if (prox < 21 && (S.premium || prox === 0))
+    html += `<div class="row"><button class="btn accent full" data-dia="${prox}">Ver a pergunta do dia ${prox+1}</button></div>`;
+  else if (!S.premium)
+    html += `<div class="row"><button class="btn accent full" id="verPlus">Desbloquear com Cadernoterapia Plus</button></div>`;
+  html += `<div class="note">Os dias abrem um a um, à medida que escreves.</div>`;
+  return html;
+}
+
+function vDiario(){
+  const E = S.entries;
+  const dias = new Set(E.map(e=>e.date.slice(0,10)));
+  let streak = 0; const d = new Date();
+  if (!dias.has(hoje())) d.setDate(d.getDate()-1);
+  while (dias.has(d.toISOString().slice(0,10))) { streak++; d.setDate(d.getDate()-1); }
+  const cont = {}; E.forEach(e=>{ if(e.mood) cont[e.mood]=(cont[e.mood]||0)+1; });
+  const max = Math.max(1, ...Object.values(cont));
+  const top = Object.entries(cont).sort((a,b)=>b[1]-a[1])[0];
+  let html = header() + `<h1 class="greet">O teu percurso</h1><p class="sub">As perguntas a que já respondeste no caderno. As respostas estão lá, escritas por ti.</p>
+    <div class="stats">
+      <div class="stat"><b>${E.length}</b><span>páginas</span></div>
+      <div class="stat"><b>${streak}</b><span>dias seguidos</span></div>
+      <div class="stat"><b style="font-size:17px;line-height:39px">${top?moodById(top[0]).nome:"—"}</b><span>emoção mais frequente</span></div>
+    </div>`;
+  if (Object.keys(cont).length) {
+    html += `<div class="section-title">Como te tens sentido</div><div class="card mbars">` +
+      MOODS.filter(m=>cont[m.id]).map(m=>`<div class="mbar"><span>${m.nome}</span><div class="track"><i style="width:${cont[m.id]/max*100}%;background:${m.cor}"></i></div><span class="n">${cont[m.id]}</span></div>`).join("") + `</div>`;
+  }
+  html += `<div class="section-title">Perguntas respondidas</div>`;
+  if (!E.length) html += `<div class="card empty">Ainda não respondeste a nenhuma pergunta.<br>Começa no separador <b>Hoje</b>.</div>`;
+  [...E].reverse().forEach(e=>{
+    const m = e.mood && moodById(e.mood);
+    const data = new Date(e.date).toLocaleDateString("pt-PT",{day:"numeric",month:"long"});
+    html += `<div class="card entry">
+      <div class="entry-meta">${m?`<span class="dot" style="background:${m.cor}"></span>${m.nome} · `:""}${e.prog?esc(e.prog)+" · ":""}${data}</div>
+      <div class="entry-q">${esc(e.q)}</div>
+    </div>`;
+  });
+  return html;
+}
+
+function vConta(){
+  return header() + `<h1 class="greet">Conta</h1><p class="sub">O teu plano e os teus dados.</p>
+    <div class="card plan">
+      <div class="serif" style="font-size:20px">Cadernoterapia Plus</div>
+      <div class="price">1 € <small>/ mês</small></div>
+      <ul>
+        <li>Perguntas ilimitadas, todos os dias</li>
+        <li>Todos os programas de 21 dias</li>
+        <li>Novos programas todos os meses</li>
+        <li>Histórico de emoções completo</li>
+      </ul>
+      ${S.premium
+        ? `<button class="btn ghost full" id="cancelar">Voltar ao plano gratuito (demo)</button>`
+        : `<button class="btn accent full" id="subscrever">Ativar Plus (demonstração)</button>`}
+      <div class="note">Prova de conceito: não é feito nenhum pagamento. Na app real, a subscrição passa pela App Store e pela Google Play.</div>
+    </div>
+    <div class="section-title">Sobre</div>
+    <div class="card">
+      <p style="margin-bottom:10px">A Cadernoterapia ensina a usar a escrita como ferramenta de autoconhecimento e bem-estar.</p>
+      <p style="font-size:14px;color:var(--muted)">Esta app não substitui acompanhamento psicológico. Se estiveres em sofrimento intenso, procura ajuda: SNS 24 — 808 24 24 24 (opção 4, aconselhamento psicológico). Em emergência, liga 112.</p>
+    </div>
+    <div class="section-title">Dados</div>
+    <div class="card"><p style="font-size:14px;color:var(--muted);margin-bottom:12px">A app nunca guarda o que escreves, porque a escrita acontece no teu caderno. Neste dispositivo fica apenas o histórico das perguntas e das emoções que escolheste.</p>
+      <button class="btn ghost full" id="apagar">Apagar todos os dados</button></div>`;
+}
+
+/* ============ SHEETS (escrita de programa, paywall, confirmação) ============ */
+function abrirSheet(html){ $("#sheet").innerHTML = html; $("#sheetBg").classList.add("show"); }
+function fecharSheet(){ $("#sheetBg").classList.remove("show"); }
+$("#sheetBg").addEventListener("click", e => { if (e.target.id === "sheetBg") fecharSheet(); });
+
+function abrirDia(p, d){
+  abrirSheet(`<div class="q-label">${p.titulo} · Dia ${d+1} · ${p.semanas[Math.floor(d/7)]}</div>
+    <div class="q-text">${esc(p.dias[d])}</div>
+    ${HAND}
+    <div class="row"><button class="btn primary" id="guardarProg">Já escrevi · concluir o dia ${d+1}</button><button class="btn ghost" id="fechar">Fechar</button></div>`);
+  $("#fechar").onclick = fecharSheet;
+  $("#guardarProg").onclick = () => {
+    S.entries.push({id:Date.now(), date:new Date().toISOString(), mood:null, q:p.dias[d], prog:p.titulo+" · dia "+(d+1)});
+    S.progs[p.id] = [...(S.progs[p.id]||[]), d];
+    save(); fecharSheet(); render();
+    toast(d === 20 ? "Concluíste os 21 dias. Parabéns!" : "Dia " + (d+1) + " concluído");
+  };
+}
+
+function abrirPaywall(motivo){
+  abrirSheet(`<div class="serif" style="font-size:24px;margin-bottom:6px">Continua a escrever</div>
+    <p class="sub">${motivo}</p>
+    <div class="card plan"><div class="price">1 € <small>/ mês</small></div>
+      <ul><li>Perguntas ilimitadas</li><li>Todos os programas de 21 dias</li><li>Cancelas quando quiseres</li></ul>
+      <button class="btn accent full" id="subscrever">Ativar Plus (demonstração)</button>
+      <div class="note">Nenhum pagamento é feito nesta prova de conceito.</div></div>
+    <div class="row"><button class="btn ghost full" id="fechar">Agora não</button></div>`);
+  $("#fechar").onclick = fecharSheet;
+  $("#subscrever").onclick = ativarPlus;
+}
+
+function ativarPlus(){ S.premium = true; save(); fecharSheet(); render(); toast("Plus ativado (demonstração)"); }
+
+/* ============ RENDER + EVENTOS ============ */
+function render(){
+  const app = $("#app");
+  app.innerHTML = tab==="hoje" ? vHoje() : tab==="programas" ? vProgramas() : tab==="diario" ? vDiario() : vConta();
+  document.querySelectorAll("nav button").forEach(b => b.classList.toggle("on", b.dataset.tab === tab));
+
+  app.querySelectorAll("[data-mood]").forEach(b => b.onclick = () => gerar(b.dataset.mood));
+  const s = $("#surpresa"); if (s) s.onclick = () => gerar(null);
+  const o = $("#outra"); if (o) o.onclick = () => gerar(mood);
+  const g = $("#guardar"); if (g) g.onclick = () => {
+    S.entries.push({id:Date.now(), date:new Date().toISOString(), mood, q:pergunta});
+    save(); pergunta = null; mood = null; render(); toast("Mais uma página no teu caderno");
+  };
+  const vp = $("#verPlus"); if (vp) vp.onclick = () => abrirPaywall("Com o Plus tens perguntas ilimitadas e acesso a todos os programas.");
+  app.querySelectorAll("[data-prog]").forEach(b => b.onclick = () => { progAberto = b.dataset.prog; tab = "programas"; render(); window.scrollTo(0,0); });
+  const v = $("#voltar"); if (v) v.onclick = () => { progAberto = null; render(); };
+  app.querySelectorAll("[data-dia]").forEach(b => b.onclick = () => {
+    const p = PROGRAMAS.find(x=>x.id===progAberto), d = +b.dataset.dia;
+    const feitos = S.progs[p.id] || [];
+    if (feitos.includes(d)) { const e = S.entries.find(x=>x.prog===p.titulo+" · dia "+(d+1)); if (e) abrirSheet(`<div class="q-label">Dia ${d+1} · concluído</div><div class="q-text">${esc(e.q)}</div><p class="sub" style="margin-top:14px">A tua resposta está no teu caderno, escrita no dia ${new Date(e.date).toLocaleDateString("pt-PT",{day:"numeric",month:"long"})}.</p><div class="row"><button class="btn ghost full" id="fechar">Fechar</button></div>`), $("#fechar").onclick = fecharSheet; return; }
+    if (b.dataset.lock) { if (!S.premium && d > 0) abrirPaywall("Os restantes dias do programa fazem parte do Cadernoterapia Plus."); else toast("Este dia abre depois de concluíres o anterior"); return; }
+    abrirDia(p, d);
+  });
+  const sub = $("#subscrever"); if (sub) sub.onclick = ativarPlus;
+  const can = $("#cancelar"); if (can) can.onclick = () => { S.premium = false; save(); render(); toast("De volta ao plano gratuito"); };
+  const ap = $("#apagar"); if (ap) ap.onclick = () => {
+    abrirSheet(`<div class="serif" style="font-size:22px;margin-bottom:8px">Apagar tudo?</div><p class="sub">Vais perder todas as páginas e o progresso nos programas.</p>
+      <div class="row"><button class="btn accent" id="simApagar">Apagar</button><button class="btn ghost" id="fechar">Cancelar</button></div>`);
+    $("#fechar").onclick = fecharSheet;
+    $("#simApagar").onclick = () => { S = {entries:[], premium:false, gen:{d:"",n:0}, progs:{}}; save(); fecharSheet(); render(); toast("Dados apagados"); };
+  };
+}
+
+document.querySelectorAll("nav button").forEach(b => b.onclick = () => { tab = b.dataset.tab; if (tab !== "programas") progAberto = null; render(); window.scrollTo(0,0); });
+render();
+</script>
+</body>
+</html>
